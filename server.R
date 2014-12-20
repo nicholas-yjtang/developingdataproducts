@@ -36,9 +36,7 @@ shinyServer(
 
     output$spamtable <- renderDataTable({ 
       input$goPredict
-      isolate({
-        newdata[,input$show_vars,drop=FALSE]                
-      })
+      newdata[,input$show_vars,drop=FALSE]                
     })
     
     output$originalspam <- renderDataTable({
