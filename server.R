@@ -1,8 +1,9 @@
 require (shiny)
 require(UsingR)
 require(kernlab)
-require(caret)
+require(caret)  
 require(e1071)
+require(gbm)
 data(spam)
 
 
@@ -12,11 +13,14 @@ shinyServer(
   function(input, output) {
 
     isolate(withProgress(message = 'Currently creating the prediction model. Please wait...', value = 0.1, {
+
       set.seed(12345)
-      inTrain <- createDataPartition(y=spam$type,p=0.75,list=FALSE)
+      inTrain <- createDataPartition(y=spam$type,p=0.6,list=FALSE)
       training <- spam[inTrain,]
       testing <- spam[-inTrain,]
-      modelFit <- train(type ~., data=training, method="glm")      
+      fitControl <- trainControl(method="cv", number=10)
+      modelFit <- train(type ~., data=training, method="gbm", 
+                        trControl = fitControl, verbose=FALSE)  
       setProgress(1)
     }))
     
@@ -35,6 +39,10 @@ shinyServer(
       isolate({
         newdata[,input$show_vars,drop=FALSE]                
       })
+    })
+    
+    output$originalspam <- renderDataTable({
+      spam[,c(input$show_vars, "type"), drop=FALSE]      
     })
   }
 )
@@ -90,7 +98,6 @@ setSpamData <- function(spamKeyword,text){
     }  
   }
   if (spamKeyword!="type") {  
-    #print(paste0("result for ", spamKeyword, " is ", as.character(result)))
     newdata[1,spamKeyword] <<- result
   }
 }
