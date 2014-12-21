@@ -3,12 +3,12 @@ library(kernlab)
 data(spam)
 
 shinyUI(pageWithSidebar(
-  headerPanel("Predicting spam"),
+  headerPanel("Predicting e-mail spam"),
   sidebarPanel(
       conditionalPanel(
         'input.tabs=="Prediction"',
-        HTML('<label for="spamtext">Insert your spam text here</label>'),
-        tags$textarea(id="spamtext", rows=5,"Sample spam text"),      
+        HTML('<label for="spamtext">Insert your e-mail text here</label>'),
+        tags$textarea(id="spamtext", rows=6,"Dear Watson,\n\nCould you send me the case files on the Baskervilles? Thank you\n\nS.H."),
         actionButton("goPredict", "Predict")      
       ),
       conditionalPanel(
@@ -26,7 +26,7 @@ shinyUI(pageWithSidebar(
       tabsetPanel(
         id = "tabs",
         tabPanel("Prediction", 
-                 div("This project will attempt to guess if the text you type (on the left hand side) in is considered spam"),
+                 div("This project will attempt to guess if the email text you type (on the left hand side) in is considered spam"),
                  br(),
                  div("The prediction model is built using boosted trees, with the spam data from the UCI Machine Learning"),
                  br(),
