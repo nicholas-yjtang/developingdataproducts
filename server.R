@@ -14,13 +14,19 @@ shinyServer(
 
     isolate(withProgress(message = 'Currently creating the prediction model. Please wait...', value = 0.1, {
 
-      set.seed(12345)
-      inTrain <- createDataPartition(y=spam$type,p=0.6,list=FALSE)
-      training <- spam[inTrain,]
-      testing <- spam[-inTrain,]
-      fitControl <- trainControl(method="cv", number=10)
-      modelFit <- train(type ~., data=training, method="gbm", 
+      if (!file.exists("model.rda")) {
+        set.seed(12345)
+        inTrain <- createDataPartition(y=spam$type,p=0.6,list=FALSE)
+        training <- spam[inTrain,]
+        testing <- spam[-inTrain,]
+        fitControl <- trainControl(method="cv", number=10)
+        modelFit <- train(type ~., data=training, method="gbm", 
                         trControl = fitControl, verbose=FALSE)  
+        save(modelFit, file="model.rda")
+      }
+      else {
+        load("model.rda")
+      }
       setProgress(1)
     }))
     
