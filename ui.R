@@ -35,7 +35,7 @@ shinyUI(pageWithSidebar(
                  br(),
                  h2("Prediction output:"),
                  br(),
-                 div(textOutput("predictionresult"), style="color:blue;font-size=2.5em")
+                 h3(textOutput("predictionresult"), style="color:blue;font-weight:bold;text-align:center")
                  ),
         tabPanel("Input information",
                  div("This section describes the information on the input, transformed into data as described by ", 
